@@ -245,7 +245,14 @@ $(document).ready(function(from, to) {
                     $("#fatura-table").empty()
                     $("#fatura-table").append(contentFatura)
                 },
-                error: function (data) {}
+                error: function (data) {
+                    $("#fatura-table").empty()
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'No results found',
+                    })
+                }
             });
         }
     })
@@ -300,7 +307,14 @@ $(document).ready(function(from, to) {
                     chartPie(pieData)
 
                 },
-                error: function (data) {}
+                error: function (data) {
+                    $("#fatura-table").empty()
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'No results found',
+                    })
+                }
             });
         }	
     })
@@ -372,7 +386,6 @@ $("#columnChart").click((e) => {
                 },
                 success: function (data) {
                     let columnData = []
-                    console.log(data)
                     data.map(user => {
                         let faturaData = []
                         user.fatura.map(fatura => {
@@ -385,7 +398,14 @@ $("#columnChart").click((e) => {
                     chartColumn(columnData, columnMonth, from, to)
 
                 },
-                error: function (data) {}
+                error: function (data) {
+                    $("#fatura-table").empty()
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'No results found',
+                    })
+                }
             });
         }	
     })
