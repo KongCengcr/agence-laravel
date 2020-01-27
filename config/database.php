@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'pgsql'),
+    'default' => env('DB_CONNECTION', 'mysql'),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,7 +52,7 @@ return [
             'username' => env('DB_USERNAME', 'ufwugz3ned5xbf70'),
             'password' => env('DB_PASSWORD', 'PmP8BHaX2qYWSMd5OAJH'),
             'unix_socket' => env('DB_SOCKET', ''),
-            'charset' => 'utf8mb4',
+            'charset' => 'utf8',
             'collation' => 'utf8_general_ci',
             'prefix' => '',
             'prefix_indexes' => true,
