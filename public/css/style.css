@@ -1,0 +1,28 @@
+.contents {
+    display: contents;
+}
+
+.height-100 {
+    height: 100% !important;
+}
+.section-content {
+    padding: 30px 60px;
+}
+
+.title-name {
+    padding: 4px 15px;
+}
+
+.table {
+    margin-bottom: 0 !important;
+}
+
+.center-btn {
+    display: table-cell;
+    margin: auto;
+}
+
+.center-btn div {
+    margin-bottom: 10px;
+    width: 100%;
+}

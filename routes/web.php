@@ -11,8 +11,9 @@
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', function () {
+    return view('desempenho');
+});
 
-Route::get('/', 'IndexController@index');
+Route::get('/users', 'IndexController@users');
+Route::get('/fatura', 'IndexController@fatura');
