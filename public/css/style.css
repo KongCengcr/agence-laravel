@@ -25,4 +25,5 @@
 .center-btn div {
     margin-bottom: 10px;
     width: 100%;
+    word-break: break-all;
 }

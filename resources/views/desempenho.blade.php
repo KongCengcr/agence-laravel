@@ -28,26 +28,26 @@
 				
 			</div>
 			<div class="row">
-				<div class="col-sm-2">
+				<div class="col-md-12 col-lg-2">
 					<h2>Consultores</h2>
 				</div>
-				<div class="col-sm-4">
+				<div class="col-md-4 col-lg-4">
 					<div class="form-group height-100" id="selectName">
 						<select class="form-control height-100" name="origin" id="origin" multiple="multiple" >
 							
 						</select>
 					</div>
 				</div>
-				<div class="col-sm-1 center-btn">
+				<div class="col-md-4 col-lg-1 center-btn">
 						<div type="button" class="add  btn btn-light">»</div></br>
 						<div type="button" class="remove  btn btn-light">«</div>
 				</div>
-				<div class="col-sm-4">
+				<div class="col-md-4 col-lg-4">
 					<div class="form-group height-100">
 						<select class="form-control height-100" name="destination" id="destination" multiple="multiple"></select>
 					</div>
 				</div>
-				<div class="col-sm-1 center-btn">
+				<div class="col-md-12 col-lg-1 center-btn">
 					
 					<div type="button" id="relatorio" class="btn btn-light">Relatório</div>
 					<div type="button" id="pieChart" class=" btn btn-light">Pizza</div>
