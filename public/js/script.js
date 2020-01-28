@@ -67,7 +67,7 @@ $(document).ready(function(from, to) {
         let months = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
         let dateMonth = new Date(date)
 
-        return `${months[dateMonth.getMonth()]} de ${dateMonth.getFullYear()}`
+        return `${months[dateMonth.getMonth()+1]} de ${dateMonth.getFullYear()}`
     }
 
     const chartPie = (pieData) => {
