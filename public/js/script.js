@@ -24,18 +24,18 @@ $(document).ready(function(from, to) {
     
     let valueOption
     let month =`
-        <option value="0">Jan</option>
-        <option value="01">Fev</option>
-        <option value="02">Mar</option>
-        <option value="03">Abr</option>
-        <option value="04">Mai</option>                        
-        <option value="05">Jun</option>
-        <option value="06">Jul</option>
-        <option value="07">Ago</option>
-        <option value="08" selected>Set</option>
-        <option value="09">Out</option>                          
-        <option value="10">Nov</option>
-        <option value="11">Dez</option>`;
+        <option value="01">Jan</option>
+        <option value="02">Fev</option>
+        <option value="03">Mar</option>
+        <option value="04">Abr</option>
+        <option value="05">Mai</option>                        
+        <option value="06">Jun</option>
+        <option value="07">Jul</option>
+        <option value="08">Ago</option>
+        <option value="09" selected>Set</option>
+        <option value="10">Out</option>                          
+        <option value="11">Nov</option>
+        <option value="12">Dez</option>`;
 
     let year = `
         <option value="2003">2003
@@ -67,7 +67,7 @@ $(document).ready(function(from, to) {
         let months = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
         let dateMonth = new Date(date)
 
-        return `${months[dateMonth.getMonth()+1]} de ${dateMonth.getFullYear()}`
+        return `${months[dateMonth.getMonth()]} de ${dateMonth.getFullYear()}`
     }
 
     const chartPie = (pieData) => {
@@ -102,7 +102,25 @@ $(document).ready(function(from, to) {
         });
     }
 
-    const chartColumn = (columnData, columnMonth, from, to) => {
+    const chartColumn = (columnData, columnMonth, from, to, dataCostoMedio) => {
+        let costoMedio = []
+
+        for(let i = 0; i < columnMonth.length; i++ ){
+            costoMedio.push(dataCostoMedio)
+        }
+        
+        let lineChart = new Object({
+            type: 'spline',
+            name: 'Costo medio fijo',
+            data: costoMedio,
+            marker: {
+                lineWidth: 2,
+                lineColor: Highcharts.getOptions().colors[3],
+                fillColor: 'white'
+            }
+        })
+        columnData.push(lineChart)
+
         $("#fatura-table").highcharts({
             chart: {
                 type: 'column'
@@ -115,7 +133,7 @@ $(document).ready(function(from, to) {
             },
             xAxis: {
                 categories: columnMonth,
-                crosshair: true
+                crosshair: true,
             },
             yAxis: {
                 min: 0,
@@ -137,7 +155,7 @@ $(document).ready(function(from, to) {
                     borderWidth: 0
                 }
             },
-            series: columnData
+            series: columnData,
         });
     }
 
@@ -386,16 +404,19 @@ $("#columnChart").click((e) => {
                 },
                 success: function (data) {
                     let columnData = []
+                    let dataCostoMedio
                     data.map(user => {
                         let faturaData = []
                         user.fatura.map(fatura => {
                             let faturaUser = fatura.receita_liquida
+                            dataCostoMedio = fatura.custo_fixo
                             faturaData.push(faturaUser)
                         })
                         let dataUser = new Object({name: user.no_usuario, data: faturaData})
                         columnData.push(dataUser)
                     })
-                    chartColumn(columnData, columnMonth, from, to)
+                    
+                    chartColumn(columnData, columnMonth, from, to, dataCostoMedio)
 
                 },
                 error: function (data) {

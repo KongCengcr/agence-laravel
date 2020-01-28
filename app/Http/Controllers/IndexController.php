@@ -20,7 +20,7 @@ class IndexController extends Controller
                                         WHERE 
                                             permissao.co_sistema = 1 
                                             AND permissao.in_ativo = "S" 
-                                            AND permissao.co_tipo_usuario IN (1, 2, 3)'
+                                            AND permissao.co_tipo_usuario IN (0, 1, 2)'
                             );
         return $users;
     }
@@ -79,6 +79,7 @@ class IndexController extends Controller
                 global $total_custo_fixo;
                 global $total_comissao;
                 global $total_lucro;
+                global $total_imp;
                 global $groupDate;
                 if($invoices[$i]->co_usuario == $queryName){
                     $date = substr($invoices[$i]->data_emissao,0,7);
@@ -86,30 +87,36 @@ class IndexController extends Controller
                     if( empty($groupDate)){
                         $groupDate = $date;
 
-                        $receita_liquida =  ($invoices[$i]->valor - $invoices[$i]->comissao_cn);
-                        $comissao = ($invoices[$i]->valor - ($invoices[$i]->valor*$invoices[$i]->total_imp_inc) )* $invoices[$i]->comissao_cn;
-                        $lucro = $invoices[$i]->valor - ($invoices[$i]->brut_salario + $invoices[$i]->comissao_cn);
+                        $receita_liquida =  $invoices[$i]->valor;
+                        $imp_receita = ($invoices[$i]->total_imp_inc/100)* $invoices[$i]->valor;
                         $custo_fixo = $invoices[$i]->brut_salario;
+                        $comissao = ($invoices[$i]->valor - ($invoices[$i]->valor*($invoices[$i]->total_imp_inc/100)) )* ($invoices[$i]->comissao_cn/100);
+                        
                     }elseif($date == $groupDate){
 
-                        $receita_liquida +=  ($invoices[$i]->valor - $invoices[$i]->comissao_cn) ;
-                        $comissao += ($invoices[$i]->valor - ($invoices[$i]->valor*$invoices[$i]->total_imp_inc) )* $invoices[$i]->comissao_cn;
-                        $lucro += $invoices[$i]->valor - ($invoices[$i]->brut_salario + $invoices[$i]->comissao_cn);
+                        $receita_liquida +=  $invoices[$i]->valor;
+                        $imp_receita += ($invoices[$i]->total_imp_inc/100)* $invoices[$i]->valor;
                         $custo_fixo = $invoices[$i]->brut_salario;
+                        $comissao += ($invoices[$i]->valor - ($invoices[$i]->valor*($invoices[$i]->total_imp_inc/100)) )* ($invoices[$i]->comissao_cn/100);
+                        
                     }else{
+                        $receita = $receita_liquida - $imp_receita;
+                        $lucro = ($receita - $custo_fixo) - $comissao;
+
                         array_push($fatura, array(
-                            "data_emissao" => $date, 
-                            "receita_liquida" => $receita_liquida, 
+                            "data_emissao" => $groupDate, 
+                            "receita_liquida" => $receita, 
                             "custo_fixo" => $custo_fixo, 
                             "comissao"=> $comissao,
-                            "lucro" => $lucro
+                            "lucro" => ($receita - $custo_fixo) - $comissao,
                             )
                         );
                         $groupDate = $date;
 
-                        $total_receita_liquida += $receita_liquida;
-                        $total_custo_fixo += $invoices[$i]->brut_salario;
+                        $total_receita_liquida += $receita;
+                        $total_custo_fixo += $custo_fixo;
                         $total_comissao += $comissao;
+                        $total_imp += $imp_receita;
                         $total_lucro += $lucro;
                     }
                     $name = $invoices[$i]->no_usuario;
@@ -119,20 +126,23 @@ class IndexController extends Controller
             }
 
             if($to == $groupDate){
+                $receita = $receita_liquida - $imp_receita;
+                $lucro = ($receita - $custo_fixo) - $comissao;
                 array_push($fatura, array(
                     "data_emissao" => $date, 
-                    "receita_liquida" => $receita_liquida, 
+                    "receita_liquida" => $receita, 
                     "custo_fixo" => $custo_fixo, 
                     "comissao"=> $comissao,
-                    "lucro" => $lucro
+                    "lucro" => $lucro,
                     )
                 );
                 $groupDate = '';
 
-                $total_receita_liquida = $receita_liquida;
-                $total_custo_fixo = $custo_fixo;
-                $total_comissao = $comissao;
-                $total_lucro = $lucro;
+                $total_receita_liquida += $receita;
+                $total_custo_fixo += $custo_fixo;
+                $total_comissao += $comissao;
+                $total_lucro += $lucro;
+                $total_imp += $imp_receita;
             }
             
             $nameInvoice = [
@@ -142,7 +152,8 @@ class IndexController extends Controller
                 "total_receita_liquida" =>  $total_receita_liquida,
                 "total_custo_fixo" => $total_custo_fixo,
                 "total_comissao" => $total_comissao,
-                "total_lucro" => $total_lucro
+                "total_lucro" => $total_lucro,
+                "total_imp" => $total_imp
             ];
 
             if(count($fatura) > 0){
@@ -150,6 +161,11 @@ class IndexController extends Controller
             }
             
             $fatura= [];
+            $total_receita_liquida = 0;
+            $total_custo_fixo = 0;
+            $total_comissao = 0;
+            $total_lucro = 0;
+            $total_imp = 0;
         }
         
         return $datas;
